@@ -15,7 +15,7 @@ The program is supposed to be minimalistic and fast. Therefore it may be rewritt
 
 ### Add your own sound
 
-To add your own sound change line 173. Should work with any audio file, but if not convert it to a different typ. The default file is `sound.mp3`. Only tested on Windows, so if the filepath gets generated wrongly open an issue or fix it yourself.
+To add your own sound change line 173. Should work with any audio file, but if not convert it to a different typ. The default file is `sound.mp3`. Only tested on Windows, so if the filepath gets generated wrong open an issue or send a pull request.
 ```python
 file = "sound.mp3"
 # other code e.g. generation of filepath

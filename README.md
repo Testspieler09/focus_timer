@@ -15,10 +15,11 @@ The program is supposed to be minimalistic and fast. Therefore it may be rewritt
 
 ### Add your own sound
 
-To add your own sound change line 179. Should work with any audio file, but if not convert it to a different typ. The default file is `sound.mp3`.
+To add your own sound change line 174. Should work with any audio file, but if not convert it to a different typ. The default file is `sound.mp3`.
 ```python
 playsound("<FILENAME>.<EXTENSION>", False)
 ```
+Otherwise you could also just add your file to the directory and name it `sound.mp3`, but remember to delete or rename the default one. To give credit the sound is published by [Alex Jauk](https://pixabay.com/de/users/alex_jauk-16800354/).
 
 ## Planed features
 

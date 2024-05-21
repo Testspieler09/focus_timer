@@ -40,15 +40,15 @@ class Timer:
         return max(self.remaining_time, 0)
 
     def is_finished(self) -> None:
-        return self.get_remaining_time() <= 0
+        return self.get_remaining_time() == 0
 
 class Renderer:
-    def __init__(self, intervals) -> None:
+    def __init__(self, intervals, footer_list) -> None:
         # INIT WINDOWS
         self.screen = initscr()
         dimensions = self.screen.getmaxyx()
-        clock_x, clock_y = self.get_coordinates_for_centered_text("00:00") # string always length of 5
-        text_x, text_y = self.get_coordinates_for_centered_text("Break Time") # string always length of 10
+        clock_x, clock_y = self.get_coordinates_for_centered_text(" "*5)
+        text_x, text_y = self.get_coordinates_for_centered_text(" "*10)
         interval_x, interval_y = self.get_coordinates_for_centered_text(" "*(len(str(intervals))*2+2))
         self.windows = [self.screen, # 0: main_scr
                         newwin(1, dimensions[1], dimensions[0]-1, 0), # 1: footer
@@ -67,25 +67,43 @@ class Renderer:
         self.screen.clear()
         self.screen.refresh()
 
+        # PRINT FOOTER TO WINDOW
+        self.init_footer(footer_list, dimensions[1]-1)
+
+    def init_footer(self, args: list, max_len: int) -> None:
+        char_amount = len("".join(args))
+
+        if char_amount < max_len:
+            width = (max_len - char_amount) // (len(args) - 1)
+            formatted_string = "".join([arg + " "*width for arg in args]).strip()
+            self.output_text_to_window(1, formatted_string, 0, 0)
+            return
+
+        if char_amount // 2 < max_len:
+            self.change_footer()
+            lists = args[:len(args)//2], args[len(args)//2:]
+            char_amount_1 = len("".join(lists[0]))
+            char_amount_2 = len("".join(lists[1]))
+            width_1 = (max_len - char_amount_1) // (len(lists[0])-1)
+            width_2 = (max_len - char_amount_2) // (len(lists[1])-1)
+            lists = ["".join([arg + " "*width_1 for arg in lists[0]]).strip(), "".join([arg + " "*width_2 for arg in lists[1]]).strip()]
+            self.output_text_to_window(1, lists[0], 0, 0)
+            self.output_text_to_window(1, lists[1], 1, 0)
+            return
+
     def change_footer(self) -> None:
         dimensions = self.screen.getmaxyx()
         self.windows[1] = newwin(2, dimensions[1], dimensions[0]-2, 0)
 
     def output_text_to_window(self, win: int, text: str, y=0, x=0, *args) -> None:
         error_msg = "Couldn't print string to window."
-        if args:
-            attributes = A_NORMAL
-            for attr in args:
-                attributes |= attr
-            try:
-                self.windows[win].addstr(y, x, text, attributes)
-            except Exception:
-                print(error_msg)
-        else:
-            try:
-                self.windows[win].addstr(y, x, text)
-            except Exception:
-                print(error_msg)
+        attributes = A_NORMAL
+        for attr in args:
+            attributes |= attr
+        try:
+            self.windows[win].addstr(y, x, text, attributes)
+        except Exception:
+            print(error_msg)
         self.windows[win].refresh()
 
     def get_input(self) -> str:
@@ -106,34 +124,12 @@ class Renderer:
         echo()
         endwin()
 
-def init_footer(screen, args: list, max_len: int) -> None:
-    char_amount = len("".join(args))
-
-    if char_amount < max_len:
-        width = (max_len - char_amount) // (len(args) - 1)
-        formatted_string = "".join([arg + " "*width for arg in args]).strip()
-        screen.output_text_to_window(1, formatted_string, 0, 0)
-        return
-
-    if char_amount // 2 < max_len:
-        screen.change_footer()
-        lists = args[:len(args)//2], args[len(args)//2:]
-        char_amount_1 = len("".join(lists[0]))
-        char_amount_2 = len("".join(lists[1]))
-        width_1 = (max_len - char_amount_1) // (len(lists[0])-1)
-        width_2 = (max_len - char_amount_2) // (len(lists[1])-1)
-        lists = ["".join([arg + " "*width_1 for arg in lists[0]]).strip(), "".join([arg + " "*width_2 for arg in lists[1]]).strip()]
-        screen.output_text_to_window(1, lists[0], 0, 0)
-        screen.output_text_to_window(1, lists[1], 1, 0)
-        return
 
 def main(args):
     # Init Objects
-    screen = Renderer(args.intervals)
-    timer = [Timer(60*args.worktime), Timer(60*args.breaktime)]
-
     footer_list = ["[P]ause/[C]ontinue", "[R]eset", "[U]pdate", "[Q]uit"]
-    init_footer(screen, footer_list, max_len=screen.screen.getmaxyx()[1]-1)
+    screen = Renderer(args.intervals, footer_list)
+    timer = [Timer(60*args.worktime), Timer(60*args.breaktime)]
 
     def run_prog():
         current_interval = 0
@@ -167,8 +163,7 @@ def main(args):
                         run_prog()
                     case "U":
                         screen.kill_scr()
-                        screen = Renderer(args.intervals)
-                        init_footer(screen, footer_list, max_len=screen.screen.getmaxyx()[1]-1)
+                        screen = Renderer(args.intervals, footer_list)
                         screen.output_text_to_window(3, title[break_timer_enabled], 0, 0, A_UNDERLINE)
                         screen.output_text_to_window(2, current_timer.__str__(), 0, 0, A_STANDOUT)
 
@@ -179,8 +174,8 @@ def main(args):
                     playsound("sound.mp3", False)
                 sleep(3)
             except Exception:
-                sleep(3)
                 print("Something went wrong with playing the sound.mp3 file. Make shure it exists in the folder of this python file.")
+                sleep(3)
 
             break_timer_enabled = 1 - break_timer_enabled
 

@@ -1,6 +1,6 @@
 # Focus Timer
 
-A minimalistic terminal based countdown timer which uses intervals [focus | break] to help work efficiently.
+A minimalistic terminal based countdown timer which uses intervals [focus | break] to help work efficiently. The program was developed and tested on Windows.
 
 ## Aim of the Program
 
@@ -15,9 +15,11 @@ The program is supposed to be minimalistic and fast. Therefore it may be rewritt
 
 ### Add your own sound
 
-To add your own sound change line 174. Should work with any audio file, but if not convert it to a different typ. The default file is `sound.mp3`.
+To add your own sound change line 173. Should work with any audio file, but if not convert it to a different typ. The default file is `sound.mp3`. Only tested on Windows, so if the filepath gets generated wrongly open an issue or fix it yourself.
 ```python
-playsound("<FILENAME>.<EXTENSION>", False)
+file = "sound.mp3"
+# other code e.g. generation of filepath
+playsound(filepath, False)
 ```
 Otherwise you could also just add your file to the directory and name it `sound.mp3`, but remember to delete or rename the default one. To give credit the sound is published by [Alex Jauk](https://pixabay.com/de/users/alex_jauk-16800354/).
 

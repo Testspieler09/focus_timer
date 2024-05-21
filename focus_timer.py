@@ -3,7 +3,8 @@ from curses import initscr, newwin, curs_set, cbreak, noecho, nocbreak, echo, en
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 from playsound import playsound
-from sys import exit
+from os.path import split
+from sys import argv, exit
 
 class Timer:
     def __init__(self, total_time) -> None:
@@ -169,12 +170,14 @@ def main(args):
 
                 screen.output_text_to_window(2, current_timer.__str__(), 0, 0, A_STANDOUT)
 
+            file = "sound.mp3"
+            filepath = split(argv[0])[0] + "\\" + file
             try:
                 with StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
-                    playsound("sound.mp3", False)
+                    playsound(filepath, False)
                 sleep(3)
             except Exception:
-                print("Something went wrong with playing the sound.mp3 file. Make shure it exists in the folder of this python file.")
+                print(f"Something went wrong with playing the {file} file. Make shure it exists in the folder of this python file.\n{split(argv[0])[0]}")
                 sleep(3)
 
             break_timer_enabled = 1 - break_timer_enabled

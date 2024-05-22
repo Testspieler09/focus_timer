@@ -9,7 +9,7 @@ The program is supposed to be minimalistic and fast. Therefore it may be rewritt
 ## Current features
 
 - basic features (pause, reset, continue timer)
-- update the screen if window was resized (manually)
+- update the screen if window was resized (should work automatically but just in case one can do it manually)
     - STILL TRY TO NOT RESIZE THE WINDOW WHILE IT'S EXECUTING, AS IT WON'T ALWAYS WORK AND MAY CAUSE PROBLEMS
 - support for own alert sounds
 

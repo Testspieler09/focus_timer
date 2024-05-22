@@ -162,7 +162,7 @@ def main(args):
                         screen.output_text_to_window(2, timer[0].__str__(), 0, 0, A_STANDOUT)
                         sleep(3)
                         run_prog()
-                    case "U":
+                    case "U" | "KEY_RESIZE":
                         screen.kill_scr()
                         screen = Renderer(args.intervals, footer_list)
                         screen.output_text_to_window(3, title[break_timer_enabled], 0, 0, A_UNDERLINE)

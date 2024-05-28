@@ -158,6 +158,7 @@ def main(args):
                     case "R":
                         timer[0].reset()
                         timer[1].reset()
+                        screen.output_text_to_window(4, f"{1:0{len(str(args.intervals))}}/{args.intervals}", 0, 0)
                         screen.output_text_to_window(3, title[0], 0, 0, A_UNDERLINE)
                         screen.output_text_to_window(2, timer[0].__str__(), 0, 0, A_STANDOUT)
                         sleep(3)
@@ -165,6 +166,7 @@ def main(args):
                     case "U" | "KEY_RESIZE":
                         screen.kill_scr()
                         screen = Renderer(args.intervals, footer_list)
+                        screen.output_text_to_window(4, f"{current_interval:0{len(str(args.intervals))}}/{args.intervals}", 0, 0)
                         screen.output_text_to_window(3, title[break_timer_enabled], 0, 0, A_UNDERLINE)
                         screen.output_text_to_window(2, current_timer.__str__(), 0, 0, A_STANDOUT)
 

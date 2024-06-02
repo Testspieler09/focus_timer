@@ -125,7 +125,6 @@ class Renderer:
         echo()
         endwin()
 
-
 def main(args):
     # Init Objects
     footer_list = ["[P]ause/[C]ontinue", "[R]eset", "[U]pdate", "[Q]uit"]
@@ -145,6 +144,7 @@ def main(args):
             current_timer.reset()
             current_timer.start()
             while not current_timer.is_finished():
+                sleep(0.1)
                 if (key:=screen.get_input()) != None: key = key.upper()
                 match key:
                     case "Q":

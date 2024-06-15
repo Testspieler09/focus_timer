@@ -77,7 +77,8 @@ class Renderer:
         if char_amount < max_len:
             width = (max_len - char_amount) // (len(args) - 1)
             formatted_string = "".join([arg + " "*width for arg in args]).strip()
-            self.output_text_to_window(1, formatted_string, 0, 0)
+            if self.windows[1].getbegyx()[0] >= self.windows[4].getbegyx()[0]:
+                self.output_text_to_window(1, formatted_string, 0, 0)
             return
 
         if char_amount // 2 < max_len:
@@ -88,8 +89,9 @@ class Renderer:
             width_1 = (max_len - char_amount_1) // (len(lists[0])-1)
             width_2 = (max_len - char_amount_2) // (len(lists[1])-1)
             lists = ["".join([arg + " "*width_1 for arg in lists[0]]).strip(), "".join([arg + " "*width_2 for arg in lists[1]]).strip()]
-            self.output_text_to_window(1, lists[0], 0, 0)
-            self.output_text_to_window(1, lists[1], 1, 0)
+            if self.windows[1].getbegyx()[0] >= self.windows[4].getbegyx()[0]:
+                self.output_text_to_window(1, lists[0], 0, 0)
+                self.output_text_to_window(1, lists[1], 1, 0)
             return
 
     def change_footer(self) -> None:

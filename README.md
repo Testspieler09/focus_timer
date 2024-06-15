@@ -2,6 +2,14 @@
 
 A minimalistic terminal based countdown timer which uses intervals [focus | break] to help work efficiently. The program was developed and tested on Windows.
 
+## How does the program even look?
+
+![Screenshot 2024-06-15 112150](https://github.com/Testspieler09/focus_timer/assets/142326461/f5898b1d-7fc6-471f-94d9-17a1aa0d70c3)
+
+The headline switches between `Focus Time` and `Break Time`. Furthermore the intervals get displayed as `n/N`.
+
+The foreground and background colors are determined by the color set for **black** [background] and **white** [foreground] in the terminal/shell.
+
 ## Aim of the Program
 
 The program is supposed to be minimalistic and fast. Therefore it may be rewritten in C in the future. Moreover it is meant for the terminal and does not need a GUI.

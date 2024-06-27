@@ -3,7 +3,7 @@ from curses import initscr, newwin, curs_set, cbreak, noecho, nocbreak, echo, en
 from contextlib import redirect_stdout, redirect_stderr
 from io import StringIO
 from playsound import playsound
-from os.path import split
+from os.path import split, join
 from sys import argv, exit
 
 class Timer:
@@ -175,7 +175,7 @@ def main(args):
                 screen.output_text_to_window(2, current_timer.__str__(), 0, 0, A_STANDOUT)
 
             file = "sound.mp3"
-            filepath = split(argv[0])[0] + "\\" + file
+            filepath = join(split(argv[0])[0], file)
             try:
                 with StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
                     playsound(filepath, False)

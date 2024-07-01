@@ -1,8 +1,6 @@
 from time import time, sleep
 from curses import initscr, newwin, curs_set, cbreak, noecho, nocbreak, echo, endwin, A_NORMAL, A_UNDERLINE, A_STANDOUT
-from contextlib import redirect_stdout, redirect_stderr
-from io import StringIO
-from playsound import playsound
+from simpleaudio import WaveObject
 from os.path import split, join
 from sys import argv, exit
 
@@ -39,6 +37,12 @@ class Timer:
             elapsed_time = time() - self.start_time
             return max(self.remaining_time - elapsed_time, 0)
         return max(self.remaining_time, 0)
+
+    @staticmethod
+    def play_audio(file_path):
+        wave_obj = WaveObject.from_wave_file(file_path)
+        play_obj = wave_obj.play()
+        play_obj.wait_done()
 
     def is_finished(self) -> None:
         return self.get_remaining_time() == 0
@@ -174,15 +178,12 @@ def main(args):
 
                 screen.output_text_to_window(2, current_timer.__str__(), 0, 0, A_STANDOUT)
 
-            file = "sound.mp3"
+            file = "sound.wav" # needs to be a .wav
             filepath = join(split(argv[0])[0], file)
             try:
-                with StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
-                    playsound(filepath, False)
-                sleep(3)
-            except Exception:
+                current_timer.play_audio(filepath)
+            except:
                 print(f"Something went wrong with playing the {file} file. Make shure it exists in the folder of this python file.\n{split(argv[0])[0]}")
-                sleep(3)
 
             break_timer_enabled = 1 - break_timer_enabled
 

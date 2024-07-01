@@ -1,2 +1,2 @@
 windows-curses==2.3.3
-playsound==1.2.2
+simpleaudio==1.0.4

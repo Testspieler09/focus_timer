@@ -1,10 +1,11 @@
 from time import time, sleep
 from curses import initscr, newwin, curs_set, cbreak, noecho, nocbreak, echo, endwin, A_NORMAL, A_UNDERLINE, A_STANDOUT
-from contextlib import redirect_stdout, redirect_stderr
-from io import StringIO
-from playsound import playsound
+from contextlib import contextmanager
+from pyaudio import PyAudio
+from wave import open
+import os
 from os.path import split, join
-from sys import argv, exit
+from sys import argv, exit, stdout, stderr
 
 class Timer:
     def __init__(self, total_time) -> None:
@@ -127,11 +128,46 @@ class Renderer:
         echo()
         endwin()
 
+@contextmanager
+def ignore_stdout_stderr():
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    old_stdout = os.dup(1)
+    old_stderr = os.dup(2)
+    stderr.flush()
+    stdout.flush()
+    os.dup2(devnull, 1)
+    os.dup2(devnull, 2)
+    os.close(devnull)
+    try:
+        yield
+    finally:
+        os.dup2(old_stdout, 1)
+        os.dup2(old_stderr, 2)
+        os.close(old_stderr)
+
+def play_sound(filepath):
+    wf = open(filepath, "rb")
+    with ignore_stdout_stderr():
+        p = PyAudio()
+    stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                    channels=wf.getnchannels(),
+                    rate=wf.getframerate(),
+                    output=True)
+    data = wf.readframes(1024)
+    while data:
+        stream.write(data)
+        data = wf.readframes(1024)
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
 def main(args):
     # Init Objects
     footer_list = ["[P]ause/[C]ontinue", "[R]eset", "[U]pdate", "[Q]uit"]
     screen = Renderer(args.intervals, footer_list)
     timer = [Timer(60*args.worktime), Timer(60*args.breaktime)]
+    file = "sound.wav" # needs to be a .wav file
+    filepath = join(split(argv[0])[0], file)
 
     def run_prog():
         current_interval = 0
@@ -174,13 +210,9 @@ def main(args):
 
                 screen.output_text_to_window(2, current_timer.__str__(), 0, 0, A_STANDOUT)
 
-            file = "sound.mp3"
-            filepath = join(split(argv[0])[0], file)
             try:
-                with StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
-                    playsound(filepath, False)
-                sleep(3)
-            except Exception:
+                play_sound(filepath)
+            except:
                 print(f"Something went wrong with playing the {file} file. Make shure it exists in the folder of this python file.\n{split(argv[0])[0]}")
                 sleep(3)
 

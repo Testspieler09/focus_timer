@@ -3,6 +3,7 @@ from curses import initscr, newwin, curs_set, cbreak, noecho, nocbreak, echo, en
 from contextlib import contextmanager
 from pyaudio import PyAudio
 from wave import open
+import logging
 import os
 from os.path import split, join
 from sys import argv, exit, stdout, stderr
@@ -107,7 +108,7 @@ class Renderer:
         try:
             self.windows[win].addstr(y, x, text, attributes)
         except Exception:
-            print(error_msg)
+            logging.error(error_msg)
         self.windows[win].refresh()
 
     def get_input(self) -> str:
@@ -123,6 +124,7 @@ class Renderer:
         return start_x, start_y-1
 
     def kill_scr(self) -> None:
+        logging.info("Screen got killed")
         nocbreak()
         self.screen.keypad(False)
         echo()
@@ -161,6 +163,15 @@ def play_sound(filepath):
     stream.close()
     p.terminate()
 
+def setup_logging(log_file: str) -> None:
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(filename=log_file,
+                        filemode="w",
+                        format="[ %(asctime)s | %(levelname)s ] %(message)s",
+                        datefmt="%H:%M:%S",
+                        level=logging.DEBUG)
+    logging.info("Started Logger")
+
 def main(args):
     # Init Objects
     footer_list = ["[P]ause/[C]ontinue", "[R]eset", "[U]pdate", "[Q]uit"]
@@ -168,6 +179,7 @@ def main(args):
     timer = [Timer(60*args.worktime), Timer(60*args.breaktime)]
     file = "sound.wav" # needs to be a .wav file
     filepath = join(split(argv[0])[0], file)
+    setup_logging(join(split(argv[0])[0], "focus_timer.log"))
 
     def run_prog():
         current_interval = 0
@@ -213,7 +225,7 @@ def main(args):
             try:
                 play_sound(filepath)
             except:
-                print(f"Something went wrong with playing the {file} file. Make shure it exists in the folder of this python file.\n{split(argv[0])[0]}")
+                logging.error(f"Something went wrong with playing the {file} file. Make shure it exists in the folder of this python file.\n{split(argv[0])[0]}")
                 sleep(3)
 
             break_timer_enabled = 1 - break_timer_enabled

@@ -4,7 +4,7 @@ A minimalistic terminal based countdown timer which uses intervals [focus | brea
 
 ## How does the program even look?
 
-![Screenshot 2024-06-15 112150](https://github.com/Testspieler09/focus_timer/assets/142326461/f5898b1d-7fc6-471f-94d9-17a1aa0d70c3)
+![Program](assets/program.png)
 
 The headline switches between `Focus Time` and `Break Time`. Furthermore the intervals get displayed as `n/N`.
 

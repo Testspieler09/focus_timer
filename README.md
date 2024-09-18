@@ -45,7 +45,7 @@ pip install -r requirements.txt
 
 3. Have fun with the program
 
-### On MAC
+### Wheel problem on MAC
 
 Make shure you follow [these steps](https://stackoverflow.com/questions/73268630/error-could-not-build-wheels-for-pyaudio-which-is-required-to-install-pyprojec) if you have a problem installing pyaudio related to wheels.
 
@@ -71,11 +71,7 @@ Make shure you follow [these steps](https://stackoverflow.com/questions/73268630
 > ```
 >
 > 5. Install pyaudio
-> `pip install pyaudio`
->
-> or
->
-> `pip3 install pyaudio`
+> `pip install pyaudio` or `pip3 install pyaudio`
 
 ## You want to contribute?
 

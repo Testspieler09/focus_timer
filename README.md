@@ -45,6 +45,38 @@ pip install -r requirements.txt
 
 3. Have fun with the program
 
+### On MAC
+
+Make shure you follow [these steps](https://stackoverflow.com/questions/73268630/error-could-not-build-wheels-for-pyaudio-which-is-required-to-install-pyprojec) if you have a problem installing pyaudio related to wheels.
+
+> These steps worked on M1 Pro chips
+>
+> 1. Install portaudio
+> `brew install portaudio`
+>
+> 2. Link portaudio
+> `brew link portaudio`
+>
+> 3. Copy the path where portaudio was installed (use it in the next step)
+> `brew --prefix portaudio`
+>
+> 4. Create .pydistutils.cfg in your home directory
+> `sudo nano $HOME/.pydistutils.cfg`
+> then paste the following
+>
+> ```txt
+> [build_ext]
+> include_dirs=<PATH FROM STEP 3>/include/
+> library_dirs=<PATH FROM STEP 3>/lib/
+> ```
+>
+> 5. Install pyaudio
+> `pip install pyaudio`
+>
+> or
+>
+> `pip3 install pyaudio`
+
 ## You want to contribute?
 
 - Open an issue for bugs or wanted features.

@@ -1,5 +1,7 @@
 # Focus Timer
 
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 A minimalistic terminal based countdown timer which uses intervals [focus | break] to help work efficiently. The program was developed and tested on Windows.
 
 ## How does the program even look?
